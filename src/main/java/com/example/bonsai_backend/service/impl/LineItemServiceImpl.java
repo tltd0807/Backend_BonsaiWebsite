@@ -15,6 +15,7 @@ import com.example.bonsai_backend.service.LineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sound.sampled.Line;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -39,8 +40,6 @@ public class LineItemServiceImpl implements LineItemService {
     @Autowired
     private ProductMapper productMapper;
 
-    @Autowired
-    private CartMapper cartMapper;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -85,7 +84,9 @@ public class LineItemServiceImpl implements LineItemService {
                 return repo.save(lineItem);
             } else {
                 LineItem lineItem = mapper.mapToEntity((LineItemDTO) baseDTO, LineItem.class);
-                Cart cart = cartRepo.findById(((LineItemDTO) baseDTO).getCart().getCartId()).get();
+                User user = userRepo.findUserByAccountName(((LineItemDTO) baseDTO).getCart().getUser().getAccountName());
+//                Cart cart = cartRepo.findCartByUser(((LineItemDTO) baseDTO).getCart().getCartId()).get();
+                Cart cart = cartRepo.findCartByUser(user);
                 lineItem.setProducts(product);
                 lineItem.setCart(cart);
                 BigDecimal price = BigDecimal.valueOf(lineItem.getQuantity().doubleValue()*lineItem.getProducts().getProductPrice().doubleValue());
@@ -101,8 +102,9 @@ public class LineItemServiceImpl implements LineItemService {
     @Override
     public String delete(BaseDTO baseDTO) {
         try {
-            if (repo.findById(((LineItemDTO) baseDTO).getItemId()).get() != null) {
-                LineItem lineItem = repo.findById(((LineItemDTO) baseDTO).getItemId()).get();
+            Product product = productRepo.findById(((LineItemDTO) baseDTO).getProducts().getProductId()).get();
+            if (product != null) {
+                LineItem lineItem = repo.findLineItemByProducts(product);
                 if (lineItem.getQuantity() > 1) {
                     lineItem.setQuantity(lineItem.getQuantity() - 1);
                     repo.save(lineItem);
@@ -123,13 +125,14 @@ public class LineItemServiceImpl implements LineItemService {
     @Override
     public LineItem update(BaseDTO baseDTO) {
         try {
-            if (repo.findById(((LineItemDTO) baseDTO).getItemId()).get() != null) {
-                LineItem lineItem = repo.findById(((LineItemDTO) baseDTO).getItemId()).get();
-                lineItem.setQuantity(lineItem.getQuantity()+((LineItemDTO) baseDTO).getQuantity());
-                BigDecimal price = BigDecimal.valueOf(lineItem.getQuantity().doubleValue()*lineItem.getProducts().getProductPrice().doubleValue());
-                lineItem.setQuantityPrice(price);
-                return repo.save(lineItem);
-            } else {
+            Product  product = productRepo.findById(((LineItemDTO) baseDTO).getProducts().getProductId()).get();
+            if(product!=null){
+                LineItem item  = repo.findLineItemByProducts(product);
+                item.setQuantity(item.getQuantity()+1);
+                BigDecimal price = BigDecimal.valueOf(item.getQuantity().doubleValue()*item.getProducts().getProductPrice().doubleValue());
+                item.setQuantityPrice(price);
+                return repo.save(item);
+            }else{
                 return null;
             }
         } catch (Exception e) {
@@ -138,10 +141,12 @@ public class LineItemServiceImpl implements LineItemService {
         }
     }
 
+
     @Override
     public List<LineItem> findByCart(BaseDTO baseDTO) {
         try {
-            Cart cart = cartRepo.findById(((LineItemDTO) baseDTO).getCart().getCartId()).get();
+            User user = userRepo.findUserByAccountName(((LineItemDTO) baseDTO).getCart().getUser().getAccountName());
+            Cart cart = cartRepo.findCartByUser(user);
             if (repo.findLineItemByCart(cart) != null) {
                 return repo.findLineItemByCart(cart);
             } else {

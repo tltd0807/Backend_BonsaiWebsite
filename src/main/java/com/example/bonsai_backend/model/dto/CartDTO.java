@@ -23,8 +23,8 @@ public class CartDTO extends BaseDTO implements Serializable {
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private Date createDate;
-        private UserDTO user;
 
+        private UserDTO user;
 
         private List<LineItemDTO> lineItems;
 }

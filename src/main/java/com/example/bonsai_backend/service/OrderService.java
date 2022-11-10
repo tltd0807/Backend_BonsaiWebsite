@@ -13,4 +13,5 @@ public interface OrderService {
     Orders create(BaseDTO baseDTO);
     String delete(BaseDTO baseDTO);
     Orders update(BaseDTO baseDTO);
+    Orders addProductFromCart(BaseDTO baseDTO);
 }

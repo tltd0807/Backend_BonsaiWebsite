@@ -19,7 +19,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class OrderDTO extends BaseDTO implements Serializable {
 
-    private Long orderID;
+    private Long orderId;
 
     private BigDecimal totalPrice;
 

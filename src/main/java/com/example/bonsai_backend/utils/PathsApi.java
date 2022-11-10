@@ -21,6 +21,7 @@ public interface PathsApi {
     String MODEL_GET_BY_ORDER= "/get_by_order";
     String MODEL_GET_BY_PRODUCT = "/get_by_product";
     String MODEL_GET_BY_STATUS = "/get_by_status";
+    String MODEL_ADD_PRODUCT_FROM_CART = "/add_product_from_cart";
 
 
 

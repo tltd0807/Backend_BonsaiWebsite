@@ -88,4 +88,14 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping(PathsApi.MODEL_ADD_PRODUCT_FROM_CART)
+    public ResponseEntity<Orders> addProductFromCart(@RequestBody OrderDTO request){
+        try{
+            return new ResponseEntity<>(service.addProductFromCart(request), HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -30,6 +30,7 @@ public class LineItem implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     private Orders orders;
 
 

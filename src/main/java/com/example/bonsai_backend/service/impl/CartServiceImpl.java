@@ -43,7 +43,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public String delete(BaseDTO baseDTO) {
         try{
-            Cart cart = repo.findById(((CartDTO) baseDTO).getCartId()).get();
+            User user = userRepo.findUserByAccountName(((CartDTO)baseDTO).getUser().getAccountName());
+            Cart cart = repo.findCartByUser(user);
             if(cart!=null){
                 repo.delete(cart);
                 return "OK";
