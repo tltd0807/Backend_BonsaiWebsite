@@ -64,6 +64,7 @@ public class Orders implements Serializable {
 
 
     @OneToMany(mappedBy = "order")
+//    @JsonBackReference
     private List<Orderdetail> orderdetails;
 
 

@@ -4,6 +4,8 @@
  */
 package com.example.backend_final.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -55,6 +57,7 @@ public class Product implements Serializable {
 
 
     @OneToMany(mappedBy = "product")
+    @JsonBackReference
     private List<Orderdetail> orderdetails;
 
 
