@@ -50,7 +50,7 @@ public class Orderdetail implements Serializable {
 
     @JoinColumn(name = "order_id")
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
     private Orders order;
 
 

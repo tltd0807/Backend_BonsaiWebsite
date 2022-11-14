@@ -55,13 +55,23 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public User updateUser(User user) {
-    	if(userRepository.findUserByAccountName(user.getAccountName())!=null) {
-    		Role role = roleRepository.findById(user.getRole().getRoleID()).get();
-    		user.setRole(role);
-    		return userRepository.save(user);
-    	}else {
-    		return null;
-    	}     
+        try {
+            User u = userRepository.findById(user.getUserID()).get();
+            if (u != null) {
+                Role role = roleRepository.findById(u.getRole().getRoleID()).get();
+                u.setUserAge(user.getUserAge());
+                u.setUserName(user.getUserName());
+                u.setUserImage(user.getUserImage());
+                u.setUserphoneNB(user.getUserphoneNB());
+                u.setRole(role);
+                return userRepository.save(u);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
